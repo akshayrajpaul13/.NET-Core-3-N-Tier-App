@@ -1,0 +1,60 @@
+﻿@using Microsoft.AspNetCore.Http
+@using Web.Api.Web.Shared.Helpers.Keys
+@functions
+{
+    bool MapPageActive()
+    {
+        var currentController = ViewContext.RouteData.Values["Controller"].ToString().ToLowerInvariant();
+        var currentAction = ViewContext.RouteData.Values["Action"].ToString().ToLowerInvariant();
+
+        return currentController == "home" && currentAction == "map";
+    }
+
+    string HideIf(bool condition)
+    {
+        return condition ? "style=display:none;" : "";
+    }
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - @User?.Identity.Name</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css" />
+    <link rel="stylesheet" href="~/plugins/admin-lte/adminlte.min.css" />
+    <link rel="stylesheet" href="~/plugins/Leaflet/leaflet.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body class="hold-transition sidebar-mini @(Context.Session.GetString(SessionKeys.IsSidebarCollapsed) == "1" ? "sidebar-collapse" : "") text-sm">
+    @await Html.PartialAsync("_NavMenu")
+    <div class="wrapper map-wrapper" @(HideIf(!MapPageActive()))>
+        <div class="content-wrapper">
+            <div class="content">
+                <div class="container-fluid">
+                    <div id="map"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="wrapper" @(HideIf(MapPageActive()))>
+        <div class="content-wrapper">
+            <div class="content">
+                <div class="container-fluid">
+                    @RenderBody()
+                </div><!-- /.container-fluid -->
+            </div>
+        </div>
+        @*@await Html.PartialAsync("_Footer")*@
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/plugins/admin-lte/adminlte.min.js"></script>
+    <script src="~/plugins/Leaflet/leaflet.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

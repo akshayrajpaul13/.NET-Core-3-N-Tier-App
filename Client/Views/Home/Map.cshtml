@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Map";
+}
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (!window.LeafletMap) {
+                var mapmargin = 45.1833;
+                $('#map').css("height", ($(window).height() - mapmargin));
+                $(window).on("resize", resize);
+                resize();
+                function resize() {
+                    if ($(window).width() >= 980) {
+                        $('#map').css("height", ($(window).height() - mapmargin));
+                    } else {
+                        $('#map').css("height", ($(window).height() - (mapmargin)));
+                    }
+                }
+
+                window.LeafletMap = L.map('map').fitWorld();
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(window.LeafletMap);
+            }
+        });
+    </script>
+}
